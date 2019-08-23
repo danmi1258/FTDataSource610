@@ -1,0 +1,35 @@
+// ------------------------------------------------------------------------------------------
+// This AFL script uses features of the .NET IB data source plug-in !
+// 
+// Please, set up a new database to use the .NET IB data source plug-in
+// than add this AFL script to a chart pane.
+// 
+// It will present all property names of any AB symbol than cab be queried from IB data source. 
+// ------------------------------------------------------------------------------------------
+
+printColor = colorGreen;
+
+// if you see this error, you are not using the .NET IB data source
+dataSource = GetExtraData("DataSource");
+
+if (dataSource == "IB")
+{
+	YTracePrintMessage("See all property names of any symbol:", 9);
+	allProperties = GetExtraData("Help");
+	numProps = 1 + StrCount( allProperties, "," );
+	line = "";
+	for(i = 0; i < numProps; i++)
+	{
+		line = line + StrExtract(allProperties, i) + ", ";
+		if (StrLen(line) > 120)
+		{
+			YTracePrintMessage(line, 6, printColor);
+			line = "";
+		}
+	}
+	if (StrLen(line) > 2)
+		YTracePrintMessage(StrLeft(line, StrLen(line) - 2), 6, printColor);		// remove ", " from last line
+	YTracePrintMessage("", 9);
+}
+else
+	YTracePrintMessage("Database is not configured to use IB .NET data source", 9);

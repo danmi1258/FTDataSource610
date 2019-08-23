@@ -1,0 +1,120 @@
+// ------------------------------------------------------------------------------------------
+// This AFL script uses features of the .NET IB data source plug-in !
+// 
+// Please, set up a new database to use the .NET IB data source plug-in
+// than add this AFL script to a chart pane.
+// 
+// It will present the most important properties of the current security from IB's contract database. 
+// There is no need to manually set up security properties for each security any more.
+// ------------------------------------------------------------------------------------------
+
+printColor = colorGreen;
+
+function PrintExtraData(fieldName)
+{
+	extraData = GetExtraData(fieldName);
+
+	if (typeof(extraData) == "undefined")
+	{
+		YTracePrintMessage(fieldName + ": no data", 9);
+	}
+	else
+	{
+		if (typeof(extraData) == "number")
+			YTracePrintMessage(fieldName + ": " + NumToStr(extraData, 10.5), 9, printColor);
+		else
+			YTracePrintMessage(fieldName + ": " + extraData, 9, printColor);
+	}
+}
+
+function PrintFormattedExtraData(fieldName, format, sep)
+{
+	extraData = GetExtraData(fieldName);
+
+	if (typeof(extraData) == "undefined")
+	{
+		YTracePrintMessage(fieldName + ": no data", 9);
+	}
+	else
+	{
+		if (typeof(extraData) == "number")
+			YTracePrintMessage(fieldName + ": " + NumToStr(extraData, format, sep), 9, printColor);
+		else
+			YTracePrintMessage(fieldName + ": Not numeric", 9);
+	}
+}
+
+
+// if you see this error, you are not using the .NET IB data source
+dataSource = GetExtraData("DataSource");
+
+if (dataSource == "IB")
+{
+	YTracePrintMessage("Symbol status", 9);
+	PrintFormattedExtraData("IsValid", 1, False);
+	PrintFormattedExtraData("IsKnown", 1, False);
+	PrintFormattedExtraData("ContractStatus", 1, False);
+	PrintFormattedExtraData("SymbolStatus", 1, False);
+	YTracePrintMessage("", 9);
+
+	YTracePrintMessage("Quotation status", 9);
+	PrintFormattedExtraData("QuoteDataStatus", 6, False);
+	PrintFormattedExtraData("LastTickDate", 6, False);
+	PrintFormattedExtraData("LastTickTime", 6, False);
+	YTracePrintMessage("", 9);
+
+	YTracePrintMessage("See all properties of the symbol:", 9);
+	PrintExtraData("Help");
+	YTracePrintMessage("", 9);
+
+	// if matching IB contract is found for the AB symbol 
+	if (GetExtraData("IsKnown") == 1)
+	{
+		YTracePrintMessage("Symbol information", 9);
+		// Contract
+		PrintExtraData("SymbolParts.Ticker");
+		PrintExtraData("SymbolParts.Symbol");
+		PrintExtraData("SymbolParts.Exchange");
+		PrintExtraData("SymbolParts.SecurityType");
+		PrintExtraData("SymbolParts.Currency");
+		PrintFormattedExtraData("SymbolParts.IsContinuous", 6, False);
+		YTracePrintMessage("", 9);
+
+		YTracePrintMessage("Contract information", 9);
+		// Contract
+		PrintExtraData("ContractDetails.Contract.Symbol");
+		PrintExtraData("ContractDetails.Contract.SecType");
+		PrintExtraData("ContractDetails.Contract.LastTradeDateOrContractMonth");
+		PrintFormattedExtraData("ContractDetails.Contract.Strike", 4.2, False);
+		PrintExtraData("ContractDetails.Contract.Right");
+		PrintExtraData("ContractDetails.Contract.Multiplier");
+		PrintExtraData("ContractDetails.Contract.Exchange");
+		PrintExtraData("ContractDetails.Contract.Currency");
+		PrintExtraData("ContractDetails.Contract.LocalSymbol");
+		PrintExtraData("ContractDetails.Contract.PrimaryExch");
+		PrintFormattedExtraData("ContractDetails.Contract.ConId", 8, False);
+		PrintExtraData("ContractDetails.Contract.SecIdType");
+		PrintExtraData("ContractDetails.Contract.SecId");
+		YTracePrintMessage("", 9);
+
+		// ContractDetails' other members
+		PrintExtraData("ContractDetails.MarketName");
+		PrintExtraData("ContractDetails.MinTick");
+		PrintExtraData("ContractDetails.PriceMagnifier");
+		PrintExtraData("ContractDetails.OrderTypes");
+		PrintExtraData("ContractDetails.ValidExchanges");
+		PrintExtraData("ContractDetails.LongName");
+		PrintExtraData("ContractDetails.TimeZoneId");
+		PrintExtraData("ContractDetails.TradingHours");
+		PrintExtraData("ContractDetails.LiquidHours");
+		YTracePrintMessage("", 9);
+
+		// RT Window data
+		YTracePrintMessage("Real Time window's status", 9);
+		PrintFormattedExtraData("RealTimeWindowStatus", 1, False);
+		PrintExtraData("RealTimeWindow.Ask");
+		PrintExtraData("RealTimeWindow.Bid");
+	}
+}
+else
+	YTracePrintMessage("Database is not configured to use IB .NET data source", 9);

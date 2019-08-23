@@ -1,0 +1,22 @@
+// ------------------------------------------------------------------------------------------
+// This AFL script uses features of the .NET IB data source plug-in !
+// 
+// Please, set up a new database to use the .NET IB data source plug-in
+// than add this AFL script to a chart pane.
+// 
+// It will present the current security's ticksize value from IB's contract database. 
+// ------------------------------------------------------------------------------------------
+
+
+// if you see this error, you are not using the .NET IB data source
+dataSource = GetExtraData("DataSource");
+
+if (dataSource == "IB" 											// database is configured to use IB .NET data source
+    AND GetExtraData("IsValid") == 1 							// AB database symbol is valid (symbology)
+    AND GetExtraData("IsKnown") == 1)							// IB contract is found for the symbol
+{
+	TickSize = GetExtraData("ContractDetails.MinTick");
+	YTracePrintMessage("TickSize = " + TickSize, 9, colorGreen);
+}
+else
+	YTracePrintMessage("Data is not available.", 9);

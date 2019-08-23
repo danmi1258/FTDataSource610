@@ -1,0 +1,251 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D1F4AFFE-6951-41BA-902A-054A825222BE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AmiBroker.DataSources.IB</RootNamespace>
+    <AssemblyName>AmiBroker.DataSources.IB</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>612,618,659</NoWarn>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <NoWarn>612,618,659,169</NoWarn>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ReferencePath>$(SolutionDir)_build_\bin\Debug</ReferencePath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>DotNetForAB.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AmiBroker.PlugInHost, Version=6.30.0.0, Culture=neutral, PublicKeyToken=c0d4fd12d3adc8e5, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\AmiBroker\.NET for AmiBroker\Assemblies\AmiBroker.PlugInHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.XML" />
+    <Reference Include="XDMessaging.Lite, Version=5.0.6.0, Culture=neutral, PublicKeyToken=737bc70442f2c4af, processorArchitecture=MSIL">
+      <HintPath>packages\XDMessaging.Lite.5.0.6\lib\net452\XDMessaging.Lite.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\SolutionVersion.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CSharpAPI\AccountSummaryTags.cs" />
+    <Compile Include="CSharpAPI\Bar.cs" />
+    <Compile Include="CSharpAPI\BitMask.cs" />
+    <Compile Include="CSharpAPI\ComboLeg.cs" />
+    <Compile Include="CSharpAPI\CommissionReport.cs" />
+    <Compile Include="CSharpAPI\Constants.cs" />
+    <Compile Include="CSharpAPI\Contract.cs" />
+    <Compile Include="CSharpAPI\ContractCondition.cs" />
+    <Compile Include="CSharpAPI\ContractDescription.cs" />
+    <Compile Include="CSharpAPI\ContractDetails.cs" />
+    <Compile Include="CSharpAPI\DefaultEWrapper.cs" />
+    <Compile Include="CSharpAPI\DeltaNeutralContract.cs" />
+    <Compile Include="CSharpAPI\DepthMktDataDescription.cs" />
+    <Compile Include="CSharpAPI\EClient.cs" />
+    <Compile Include="CSharpAPI\EClientErrors.cs" />
+    <Compile Include="CSharpAPI\EClientException.cs" />
+    <Compile Include="CSharpAPI\EClientMsgSink.cs" />
+    <Compile Include="CSharpAPI\EClientSocket.cs" />
+    <Compile Include="CSharpAPI\EClientSocketSSL.cs" />
+    <Compile Include="CSharpAPI\EDecoder.cs" />
+    <Compile Include="CSharpAPI\EMessage.cs" />
+    <Compile Include="CSharpAPI\EOrderDecoder.cs" />
+    <Compile Include="CSharpAPI\EReader.cs" />
+    <Compile Include="CSharpAPI\EReaderMonitorSignal.cs" />
+    <Compile Include="CSharpAPI\EReaderSignal.cs" />
+    <Compile Include="CSharpAPI\ESocket.cs" />
+    <Compile Include="CSharpAPI\ETransport.cs" />
+    <Compile Include="CSharpAPI\EWrapper.cs" />
+    <Compile Include="CSharpAPI\Execution.cs" />
+    <Compile Include="CSharpAPI\ExecutionCondition.cs" />
+    <Compile Include="CSharpAPI\ExecutionFilter.cs" />
+    <Compile Include="CSharpAPI\FamilyCode.cs" />
+    <Compile Include="CSharpAPI\HistogramEntry.cs" />
+    <Compile Include="CSharpAPI\HistoricalTick.cs" />
+    <Compile Include="CSharpAPI\HistoricalTickBidAsk.cs" />
+    <Compile Include="CSharpAPI\HistoricalTickLast.cs" />
+    <Compile Include="CSharpAPI\IBParamsList.cs" />
+    <Compile Include="CSharpAPI\IDecoder.cs" />
+    <Compile Include="CSharpAPI\IncomingMessage.cs" />
+    <Compile Include="CSharpAPI\MarginCondition.cs" />
+    <Compile Include="CSharpAPI\MessageValidator.cs" />
+    <Compile Include="CSharpAPI\MinServerVer.cs" />
+    <Compile Include="CSharpAPI\NewsProvider.cs" />
+    <Compile Include="CSharpAPI\OperatorCondition.cs" />
+    <Compile Include="CSharpAPI\Order.cs" />
+    <Compile Include="CSharpAPI\OrderComboLeg.cs" />
+    <Compile Include="CSharpAPI\OrderCondition.cs" />
+    <Compile Include="CSharpAPI\OrderState.cs" />
+    <Compile Include="CSharpAPI\OutgoingMessages.cs" />
+    <Compile Include="CSharpAPI\PercentChangeCondition.cs" />
+    <Compile Include="CSharpAPI\PriceCondition.cs" />
+    <Compile Include="CSharpAPI\PriceIncrement.cs" />
+    <Compile Include="CSharpAPI\ScannerSubscription.cs" />
+    <Compile Include="CSharpAPI\SoftDollarTier.cs" />
+    <Compile Include="CSharpAPI\TagValue.cs" />
+    <Compile Include="CSharpAPI\TickAttrib.cs" />
+    <Compile Include="CSharpAPI\TickAttribBidAsk.cs" />
+    <Compile Include="CSharpAPI\TickAttribLast.cs" />
+    <Compile Include="CSharpAPI\TickType.cs" />
+    <Compile Include="CSharpAPI\TimeCondition.cs" />
+    <Compile Include="CSharpAPI\Util.cs" />
+    <Compile Include="CSharpAPI\VolumeCondition.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="IBClient\IBClient.cs" />
+    <Compile Include="IBClient\IBClientHelper.cs" />
+    <Compile Include="IBClient\IBHistoricalDataType.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="RequestHandling\HistoricalDataRequest.cs" />
+    <Compile Include="RequestHandling\Sheduler.cs" />
+    <Compile Include="RequestHandling\StreamingDataRequest.cs" />
+    <Compile Include="RequestHandling\SymbolRequest.cs" />
+    <Compile Include="RequestHandling\HistRequestQueue.cs" />
+    <Compile Include="RequestHandling\RequestQueue.cs" />
+    <Compile Include="RequestHandling\HeadTimestampRequest.cs" />
+    <Compile Include="RequestHandling\ContractRequest.cs" />
+    <Compile Include="RequestHandling\Request.cs" />
+    <Compile Include="RequestHandling\ThrottlingQueue.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="UI\SecurityData.cs" />
+    <Compile Include="UI\SearchForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\SearchForm.Designer.cs">
+      <DependentUpon>SearchForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\WatchlistForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\WatchlistForm.Designer.cs">
+      <DependentUpon>WatchlistForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\IBConfiguration.cs" />
+    <Compile Include="UI\IBConfigurationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\IBConfigurationForm.Designer.cs">
+      <DependentUpon>IBConfigurationForm.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ContractDetailsComparer.cs" />
+    <Compile Include="LogAndMessage.cs" />
+    <Compile Include="SymbolParts.cs" />
+    <Compile Include="IBController.cs" />
+    <Compile Include="RTTickFilter.cs" />
+    <Compile Include="IBDataSource.cs" />
+    <Compile Include="TickerData.cs" />
+    <Compile Include="TickerDataCollection.cs" />
+    <Compile Include="TradingDay.cs" />
+    <Compile Include="TradingDayList.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\IBConfigurationForm.resx">
+      <DependentUpon>IBConfigurationForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\WatchlistForm.resx">
+      <DependentUpon>WatchlistForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\SearchForm.resx">
+      <DependentUpon>SearchForm.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DotNetForAB.snk" />
+    <None Include="packages.config" />
+    <None Include="Scripts\IB Properties.afl" />
+    <None Include="Scripts\IB Extra Data.afl" />
+    <None Include="Scripts\IB Status.afl" />
+    <None Include="Scripts\IB TickSize.afl" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PostBuildEvent>
+ECHO +++++ Updating Samples in _build_
+xcopy /Y /I /F /R /S "$(ProjectDir)*.afl" "$(SolutionDir)_build_\Samples\Sources\Data Plug-ins\$(ProjectName)"
+xcopy /Y /I /F /R /S "$(ProjectDir)*.txt" "$(SolutionDir)_build_\Samples\Sources\Data Plug-ins\$(ProjectName)"
+xcopy /Y /I /F /R /S "$(ProjectDir)*.cs" "$(SolutionDir)_build_\Samples\Sources\Data Plug-ins\$(ProjectName)"
+xcopy /Y /I /F /R /S "$(ProjectDir)*.resx" "$(SolutionDir)_build_\Samples\Sources\Data Plug-ins\$(ProjectName)"
+
+ECHO +++++ Updating bin in _build_
+xcopy /Y /I /F /R "$(TargetDir)$(TargetName)*.*" "$(SolutionDir)_build_\$(OutDir)"
+
+@ECHO ***** Updating AmiBroker folders *****
+IF "%25DotNetForAB_Home%25" EQU "" IF "%25DotNetForABx64_Home%25" EQU "" (ECHO "ERROR: Cannot deploy project output to AmiBroker folders. Missing environment variables." &amp; ECHO . &amp; EXIT)
+
+IF "%25DotNetForAB_Home%25" NEQ "" IF "$(Platform)" NEQ "x64" (
+ECHO ***** Deploying project output to "%25DotNetForAB_Home%25".
+xcopy /Y /I /F "$(TargetDir)$(TargetName).*" "%25DotNetForAB_Home%25\.NET for AmiBroker\Assemblies"
+xcopy /Y /I /F /S "$(ProjectDir)Scripts\*.afl" "%25DotNetForAB_Formulas%25\.NET for AmiBroker\$(ProjectName)"
+)
+
+IF "%25DotNetForABx64_Home%25" NEQ "" IF "$(Platform)" NEQ "x86" (
+ECHO ***** Deploying project output to "%25DotNetForABx64_Home%25".
+xcopy /Y /I /F "$(TargetDir)$(TargetName).*" "%25DotNetForABx64_Home%25\.NET for AmiBroker\Assemblies"
+xcopy /Y /I /F /S "$(ProjectDir)Scripts\*.afl" "%25DotNetForABx64_Formulas%25\.NET for AmiBroker\$(ProjectName)"
+)
+</PostBuildEvent>
+  </PropertyGroup>
+</Project>

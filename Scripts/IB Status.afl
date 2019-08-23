@@ -1,0 +1,50 @@
+// ------------------------------------------------------------------------------------------
+// This AFL script uses features of the .NET IB data source plug-in !
+// 
+// Please, set up a new database to use the .NET IB data source plug-in
+// than add this AFL script to a chart pane.
+// 
+// It will present the status of quotation data of thee current security 
+// You can use this info in auto trading scripts
+// ------------------------------------------------------------------------------------------
+
+
+// if you see this error, you are not using the .NET IB data source
+dataSource = GetExtraData("DataSource");
+
+printColor = colorGreen;
+
+// check if .NET IB data source is used
+if (dataSource == "IB")
+{
+	// check if AB symbol can be interpreted as an IB contract
+	if (GetExtraData("IsValid") == 0)
+	{
+		YTracePrintMessage("Error: Invalid AmiBroker symbol.", 9);
+	}
+	else
+	{	
+		// check if IB contract can be found for the AB symbol
+		if (GetExtraData("IsKnown") == 0)
+		{
+			YTracePrintMessage("Error: No IB security found.", 9);
+		}
+		else
+		{
+			quoteDataStatus = GetExtraData("QuoteDataStatus");
+			quoteDataStatusText = "error";
+			lastTickTime = "-";
+			switch (quoteDataStatus)
+			{
+				case 0:  quoteDataStatusText = "Offline"; break;			// quotation data is not used
+				case 6:  quoteDataStatusText = "Online";
+						 lastTickTime = "" + GetExtraData("LastTickTime");  
+						 break;												// quotation data is up to date
+				case 7:  quoteDataStatusText = "Failed"; break;				// quotation data is outdated because of some issue
+				default: quoteDataStatusText = "Backfilling"; break;		// quotation data is outdated while backfill is scheduled (1) or being executed (2-6)
+			}
+			YTracePrintMessage("Status: " + quoteDataStatusText, 9, printColor);
+			YTracePrintMessage("Last tick time: " + GetExtraData("LastTickTime"), 9, printColor);
+		}
+	}
+}
