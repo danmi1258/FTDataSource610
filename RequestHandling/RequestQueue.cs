@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace AmiBroker.DataSources.IB
+namespace AmiBroker.DataSources.FT
 {
     internal class RequestQueue
     {
@@ -42,7 +42,7 @@ namespace AmiBroker.DataSources.IB
                 requestList.Clear();
         }
 
-        internal virtual bool ProcessQueuedRequests(IBController ibController, bool allowNewRequest, bool writeLog)
+        internal virtual bool ProcessQueuedRequests(FTController ibController, bool allowNewRequest, bool writeLog)
         {
             int cntAtStart;
             int cntAtEnd;

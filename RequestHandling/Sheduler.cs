@@ -5,7 +5,7 @@ using System.Threading;
 using AmiBroker.Data;
 using IBApi;
 
-namespace AmiBroker.DataSources.IB
+namespace AmiBroker.DataSources.FT
 {
     class Scheduler : IDisposable
     {
@@ -29,14 +29,14 @@ namespace AmiBroker.DataSources.IB
         // ab notification
         private DateTime nextQuoteNotificationTime;                 // when to send next notification of new quotes to AB
 
-        private IBController ibController;
+        private FTController ibController;
 
         public void Dispose()
         {
             pluginAutoResetEvent.Dispose();
         }
 
-        internal Scheduler(IBController ibController)
+        internal Scheduler(FTController ibController)
         {
             this.ibController = ibController;
 
@@ -200,7 +200,7 @@ namespace AmiBroker.DataSources.IB
             {
                 tickerData.QuoteDataStatus = QuotationStatus.New;
 
-                tickerData.Quotes = new QuotationList(IBDataSource.Periodicity);
+                tickerData.Quotes = new QuotationList(FTDataSource.Periodicity);
                 if (tickerData.SymbolParts.IsContinuous)
                     tickerData.ContinuousQuotesDictionary = new Dictionary<string, QuotationList>();
                 tickerData.Filter = new RTTickFilter(tickerData, filter);

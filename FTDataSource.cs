@@ -1,16 +1,16 @@
-﻿using System;
+﻿using AmiBroker.Data;
+using System;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Windows.Forms;
-using AmiBroker.Data;
-using System.Threading;
-using System.Text;
 using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading;
+using System.Windows.Forms;
 using XDMessaging;
 
-namespace AmiBroker.DataSources.IB
+namespace AmiBroker.DataSources.FT
 {
     /// <summary>
     /// Major interface class between AmiBroker and the TWS client.
@@ -18,8 +18,8 @@ namespace AmiBroker.DataSources.IB
     /// It implements plugin's context menu.
     /// (Every event, method call, menu event from AB arrive to this class!)
     /// </summary>
-    [ABDataSource("Interactive Brokers")]
-    public class IBDataSource : DataSourceBase, IDisposable
+    [ABDataSource("Futu NiuNiu")]
+    public class FTDataSource : DataSourceBase, IDisposable
     {
         private const int TimerInterval = 500;                      // timer interval (millisecs)
         private const int ConnectionRetryInterval = 30;             // to wait for next attempt to connect (seconds)
@@ -78,7 +78,7 @@ namespace AmiBroker.DataSources.IB
         #region Database level static variables
 
         // config setting of the db
-        internal static IBConfiguration IBConfiguration;            // XML config created/saved by IBConfigureForm
+        internal static FTConfiguration IBConfiguration;            // XML config created/saved by IBConfigureForm
 
         // database and workspace data
         internal static Workspace Workspace;                        // AB workspace
@@ -95,7 +95,7 @@ namespace AmiBroker.DataSources.IB
 
         #region Current status variables
 
-        private IBController controller;                            // major IB logic (Accessed by search form as well!)
+        private FTController controller;                            // major IB logic (Accessed by search form as well!)
 
         private System.Threading.Timer timer;                       // timer to check connection and execute auto refresh
         private int inTimerTick;                                    // to prevent reentry to timer's event handler
@@ -120,10 +120,10 @@ namespace AmiBroker.DataSources.IB
         [DllImport("User32.dll", CharSet = CharSet.Auto)]
         internal static extern bool PostMessage(IntPtr hWnd, UInt32 msg, IntPtr wParam, IntPtr lParam);
 
-        public IBDataSource(string config)
+        public FTDataSource(string config)
             : base(config)
         {
-            LogAndMessage.LogSource = "IBDataSource";
+            LogAndMessage.LogSource = "FTDataSource";
 
             #region Context menu
 
@@ -215,11 +215,11 @@ namespace AmiBroker.DataSources.IB
 
         public static new string Configure(string oldSettings, ref InfoSite infoSite)
         {
-            IBConfiguration ibConfiguration = IBConfiguration.GetConfigObject(oldSettings);
+            FTConfiguration ibConfiguration = FTConfiguration.GetConfigObject(oldSettings);
 
-            IBConfigureForm ibConfigureForm = new IBConfigureForm(ibConfiguration, ref infoSite);
+            FTConfigureForm ibConfigureForm = new FTConfigureForm(ibConfiguration, ref infoSite);
             if (ibConfigureForm.ShowDialog() == DialogResult.OK)
-                return IBConfiguration.GetConfigString(ibConfigureForm.GetNewSettings());
+                return FTConfiguration.GetConfigString(ibConfigureForm.GetNewSettings());
             else
                 return oldSettings;
         }
@@ -363,7 +363,7 @@ namespace AmiBroker.DataSources.IB
                     LogAndMessage.Log(MessageType.Info, "Database config: " + Settings);
 
                     // create the config object
-                    IBConfiguration = IBConfiguration.GetConfigObject(Settings);
+                    IBConfiguration = FTConfiguration.GetConfigObject(Settings);
                     LogAndMessage.VerboseLog = IBConfiguration.VerboseLog;
                     RthOnly = IBConfiguration.RthOnly;
                     CalcNextAutoRefreshTime();
@@ -372,7 +372,7 @@ namespace AmiBroker.DataSources.IB
                     connectionRetryTime = DateTime.Now.AddSeconds(ConnectionRetryInterval);
                     prevPluginState = IBPluginState.Disconnected;
                     firstConnection = true;
-                    controller = new IBController();
+                    controller = new FTController();
 
                     // connect database to tws
                     controller.Connect(false);
@@ -849,7 +849,7 @@ namespace AmiBroker.DataSources.IB
 
                 case "Maximum":
                     if (Periodicity == Periodicity.EndOfDay)
-                        refreshStartDate = refreshStartDate.AddYears(-IBDataSource.Workspace.NumBars / 200);    // ~years calculated based on DB size
+                        refreshStartDate = refreshStartDate.AddYears(-FTDataSource.Workspace.NumBars / 200);    // ~years calculated based on DB size
                     else if (Periodicity > Periodicity.FifteenSeconds)
                         refreshStartDate = DateTime.Now.AddDays(-IBClientHelper.MaxDownloadDaysOfMediumBars);   // ~2.5 years
                     else

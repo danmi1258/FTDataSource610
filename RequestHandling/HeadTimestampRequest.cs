@@ -5,14 +5,14 @@ using IBApi;
 using AmiBroker.Data;
 using System.Globalization;
 
-namespace AmiBroker.DataSources.IB
+namespace AmiBroker.DataSources.FT
 {
     internal class HeadTimestampRequest : Request
     {
         internal HeadTimestampRequest(TickerData tickerData) : base(tickerData)
         { }
 
-        internal override bool Process(IBController ibController, bool allowNewRequest)
+        internal override bool Process(FTController ibController, bool allowNewRequest)
         {
             const int requestTimeoutPeriod = 20;
 

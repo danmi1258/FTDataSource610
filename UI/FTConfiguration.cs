@@ -4,10 +4,10 @@ using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace AmiBroker.DataSources.IB
+namespace AmiBroker.DataSources.FT
 {
-    [XmlRoot(Namespace = "AmiBroker.DataSources.IB", IsNullable = false)]
-    public class IBConfiguration
+    [XmlRoot(Namespace = "AmiBroker.DataSources.FT", IsNullable = false)]
+    public class FTConfiguration
     {
         public string Host;
         public int Port;
@@ -22,9 +22,9 @@ namespace AmiBroker.DataSources.IB
         public bool RthOnly;
         public bool SymbolUpdate;
 
-        public static string GetConfigString(IBConfiguration configuration)
+        public static string GetConfigString(FTConfiguration configuration)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(IBConfiguration));
+            XmlSerializer serializer = new XmlSerializer(typeof(FTConfiguration));
 
             Stream stream = new MemoryStream();
             serializer.Serialize(XmlWriter.Create(stream), configuration);
@@ -34,7 +34,7 @@ namespace AmiBroker.DataSources.IB
             return streamReader.ReadToEnd();
         }
 
-        public static IBConfiguration GetConfigObject(string config)
+        public static FTConfiguration GetConfigObject(string config)
         {
             // if no config string, set default values
             if (string.IsNullOrEmpty(config) || config.Trim().Length == 0)
@@ -42,10 +42,10 @@ namespace AmiBroker.DataSources.IB
 
             try
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(IBConfiguration));
+                XmlSerializer serializer = new XmlSerializer(typeof(FTConfiguration));
                 Stream stream = new MemoryStream(ASCIIEncoding.Default.GetBytes(config));
 
-                return (IBConfiguration)serializer.Deserialize(stream);
+                return (FTConfiguration)serializer.Deserialize(stream);
             }
             catch (Exception ex)
             {
@@ -54,9 +54,9 @@ namespace AmiBroker.DataSources.IB
             }
         }
 
-        public static IBConfiguration GetDefaultConfigObject()
+        public static FTConfiguration GetDefaultConfigObject()
         {
-            IBConfiguration defConfig = new IBConfiguration();
+            FTConfiguration defConfig = new FTConfiguration();
 
             defConfig.Host = "127.0.0.1";
             defConfig.Port = 7496;

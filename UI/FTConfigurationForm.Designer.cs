@@ -1,6 +1,6 @@
-﻿namespace AmiBroker.DataSources.IB
+﻿namespace AmiBroker.DataSources.FT
 {
-    partial class IBConfigureForm
+    partial class FTConfigureForm
     {
         /// <summary>
         /// Required designer variable.

@@ -1,13 +1,13 @@
 ﻿using System;
 
-namespace AmiBroker.DataSources.IB
+namespace AmiBroker.DataSources.FT
 {
     internal class SymbolRequest : Request
     {
         internal SymbolRequest(TickerData tickerData) : base(tickerData)
         { }
 
-        internal override bool Process(IBController ibController, bool allowNewRequest)
+        internal override bool Process(FTController ibController, bool allowNewRequest)
         {
             // if no contract received yet
             if (TickerData.ContractStatus == ContractStatus.SendRequest || TickerData.ContractStatus == ContractStatus.WaitForResponse)

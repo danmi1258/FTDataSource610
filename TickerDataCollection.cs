@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace AmiBroker.DataSources.IB
+namespace AmiBroker.DataSources.FT
 {
     /// <summary>
     /// This class helps mapping and accessing TickerData objects used by the data plugin
@@ -48,18 +48,18 @@ namespace AmiBroker.DataSources.IB
 
                 mapTickerToTickerData.Add(ticker, tickerData);
 
-                SymbolParts ibTicker;
+                SymbolParts ftTicker;
                 try
                 {
-                    ibTicker = new SymbolParts(ticker);
+                    ftTicker = new SymbolParts(ticker);
                 }
                 catch (Exception)
                 {
-                    ibTicker = null;
+                    ftTicker = null;
                     tickerData.QuoteDataStatus = QuotationStatus.Failed;
                     LogAndMessage.LogAndQueue(tickerData, MessageType.Warning, "Invalid symbol.");
                 }
-                tickerData.SymbolParts = ibTicker;
+                tickerData.SymbolParts = ftTicker;
 
                 return tickerData;
             }

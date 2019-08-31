@@ -5,7 +5,7 @@ using AmiBroker.Data;
 using System.Collections.Generic;
 using IBApi;
 
-namespace AmiBroker.DataSources.IB
+namespace AmiBroker.DataSources.FT
 {
     /// <summary>
     /// Bad tick filter
@@ -290,7 +290,7 @@ namespace AmiBroker.DataSources.IB
                         tickerData.Quotes.Merge(quote);
 
                     // Merge quote into last EOD quote in QuotationList
-                    if (tickerData.Quotes.Periodicity == Periodicity.EndOfDay || IBDataSource.AllowMixedEODIntra)
+                    if (tickerData.Quotes.Periodicity == Periodicity.EndOfDay || FTDataSource.AllowMixedEODIntra)
                         tickerData.Quotes.MergeEod(quote, (AmiDate)tradingDay);
                 }
             }

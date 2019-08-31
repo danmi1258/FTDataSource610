@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-namespace AmiBroker.DataSources.IB
+namespace AmiBroker.DataSources.FT
 {
     /// <summary>
     /// 

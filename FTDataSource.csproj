@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AmiBroker.DataSources.IB</RootNamespace>
     <AssemblyName>AmiBroker.DataSources.IB</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>
     </SccProjectName>
@@ -64,6 +64,15 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files\AmiBroker\.NET for AmiBroker\Assemblies\AmiBroker.PlugInHost.dll</HintPath>
     </Reference>
+    <Reference Include="FTAPI4Net">
+      <HintPath>packages\FTAPI4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.ProtocolBuffers">
+      <HintPath>packages\Google.ProtocolBuffers.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.ProtocolBuffers.Serialization">
+      <HintPath>packages\Google.ProtocolBuffers.Serialization.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -73,77 +82,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Events\FTEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\SolutionVersion.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CSharpAPI\AccountSummaryTags.cs" />
-    <Compile Include="CSharpAPI\Bar.cs" />
-    <Compile Include="CSharpAPI\BitMask.cs" />
-    <Compile Include="CSharpAPI\ComboLeg.cs" />
-    <Compile Include="CSharpAPI\CommissionReport.cs" />
-    <Compile Include="CSharpAPI\Constants.cs" />
-    <Compile Include="CSharpAPI\Contract.cs" />
-    <Compile Include="CSharpAPI\ContractCondition.cs" />
-    <Compile Include="CSharpAPI\ContractDescription.cs" />
-    <Compile Include="CSharpAPI\ContractDetails.cs" />
-    <Compile Include="CSharpAPI\DefaultEWrapper.cs" />
-    <Compile Include="CSharpAPI\DeltaNeutralContract.cs" />
-    <Compile Include="CSharpAPI\DepthMktDataDescription.cs" />
-    <Compile Include="CSharpAPI\EClient.cs" />
-    <Compile Include="CSharpAPI\EClientErrors.cs" />
-    <Compile Include="CSharpAPI\EClientException.cs" />
-    <Compile Include="CSharpAPI\EClientMsgSink.cs" />
-    <Compile Include="CSharpAPI\EClientSocket.cs" />
-    <Compile Include="CSharpAPI\EClientSocketSSL.cs" />
-    <Compile Include="CSharpAPI\EDecoder.cs" />
-    <Compile Include="CSharpAPI\EMessage.cs" />
-    <Compile Include="CSharpAPI\EOrderDecoder.cs" />
-    <Compile Include="CSharpAPI\EReader.cs" />
-    <Compile Include="CSharpAPI\EReaderMonitorSignal.cs" />
-    <Compile Include="CSharpAPI\EReaderSignal.cs" />
-    <Compile Include="CSharpAPI\ESocket.cs" />
-    <Compile Include="CSharpAPI\ETransport.cs" />
-    <Compile Include="CSharpAPI\EWrapper.cs" />
-    <Compile Include="CSharpAPI\Execution.cs" />
-    <Compile Include="CSharpAPI\ExecutionCondition.cs" />
-    <Compile Include="CSharpAPI\ExecutionFilter.cs" />
-    <Compile Include="CSharpAPI\FamilyCode.cs" />
-    <Compile Include="CSharpAPI\HistogramEntry.cs" />
-    <Compile Include="CSharpAPI\HistoricalTick.cs" />
-    <Compile Include="CSharpAPI\HistoricalTickBidAsk.cs" />
-    <Compile Include="CSharpAPI\HistoricalTickLast.cs" />
-    <Compile Include="CSharpAPI\IBParamsList.cs" />
-    <Compile Include="CSharpAPI\IDecoder.cs" />
-    <Compile Include="CSharpAPI\IncomingMessage.cs" />
-    <Compile Include="CSharpAPI\MarginCondition.cs" />
-    <Compile Include="CSharpAPI\MessageValidator.cs" />
-    <Compile Include="CSharpAPI\MinServerVer.cs" />
-    <Compile Include="CSharpAPI\NewsProvider.cs" />
-    <Compile Include="CSharpAPI\OperatorCondition.cs" />
-    <Compile Include="CSharpAPI\Order.cs" />
-    <Compile Include="CSharpAPI\OrderComboLeg.cs" />
-    <Compile Include="CSharpAPI\OrderCondition.cs" />
-    <Compile Include="CSharpAPI\OrderState.cs" />
-    <Compile Include="CSharpAPI\OutgoingMessages.cs" />
-    <Compile Include="CSharpAPI\PercentChangeCondition.cs" />
-    <Compile Include="CSharpAPI\PriceCondition.cs" />
-    <Compile Include="CSharpAPI\PriceIncrement.cs" />
-    <Compile Include="CSharpAPI\ScannerSubscription.cs" />
-    <Compile Include="CSharpAPI\SoftDollarTier.cs" />
-    <Compile Include="CSharpAPI\TagValue.cs" />
-    <Compile Include="CSharpAPI\TickAttrib.cs" />
-    <Compile Include="CSharpAPI\TickAttribBidAsk.cs" />
-    <Compile Include="CSharpAPI\TickAttribLast.cs" />
-    <Compile Include="CSharpAPI\TickType.cs" />
-    <Compile Include="CSharpAPI\TimeCondition.cs" />
-    <Compile Include="CSharpAPI\Util.cs" />
-    <Compile Include="CSharpAPI\VolumeCondition.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="IBClient\IBClient.cs" />
-    <Compile Include="IBClient\IBClientHelper.cs" />
-    <Compile Include="IBClient\IBHistoricalDataType.cs" />
+    <Compile Include="FTClient\FTClient.cs" />
+    <Compile Include="FTClient\FTClientHelper.cs" />
+    <Compile Include="FTClient\FTHistoricalDataType.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="RequestHandling\HistoricalDataRequest.cs" />
@@ -171,29 +117,29 @@
     <Compile Include="UI\WatchlistForm.Designer.cs">
       <DependentUpon>WatchlistForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\IBConfiguration.cs" />
-    <Compile Include="UI\IBConfigurationForm.cs">
+    <Compile Include="UI\FTConfiguration.cs" />
+    <Compile Include="UI\FTConfigurationForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\IBConfigurationForm.Designer.cs">
-      <DependentUpon>IBConfigurationForm.cs</DependentUpon>
+    <Compile Include="UI\FTConfigurationForm.Designer.cs">
+      <DependentUpon>FTConfigurationForm.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ContractDetailsComparer.cs" />
     <Compile Include="LogAndMessage.cs" />
     <Compile Include="SymbolParts.cs" />
-    <Compile Include="IBController.cs" />
+    <Compile Include="FTController.cs" />
     <Compile Include="RTTickFilter.cs" />
-    <Compile Include="IBDataSource.cs" />
+    <Compile Include="FTDataSource.cs" />
     <Compile Include="TickerData.cs" />
     <Compile Include="TickerDataCollection.cs" />
     <Compile Include="TradingDay.cs" />
     <Compile Include="TradingDayList.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="UI\IBConfigurationForm.resx">
-      <DependentUpon>IBConfigurationForm.cs</DependentUpon>
+    <EmbeddedResource Include="UI\FTConfigurationForm.resx">
+      <DependentUpon>FTConfigurationForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\WatchlistForm.resx">
       <DependentUpon>WatchlistForm.cs</DependentUpon>

@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("AmiBroker.DataSources.IB")]
+[assembly: AssemblyTitle("AmiBroker.DataSources.FT")]
 [assembly: AssemblyDescription("IB Data Source plug-in")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
@@ -18,7 +18,7 @@ using System.Runtime.CompilerServices;
 //[assembly: Guid("bdd07a87-9307-490a-9745-ccd45421a2de")]
 
 [assembly: ABPlugIn]
-[assembly: InternalsVisibleTo("AmiBroker.DataSources.IBDatasource.Test, PublicKey=" +
+[assembly: InternalsVisibleTo("AmiBroker.DataSources.FTDatasource.Test, PublicKey=" +
             "0024000004800000940000000602000000240000525341310004000001000100e703e70961e0fd" +
             "fcc0b7f0ce711b1bb21e47674481b87754abf6cf386e9ca3c30c2fadc079d6208b817988720c7d" +
             "351185d53ea7bfc99b67e1fcf390272c1af61cda8ce901983b1af3f4c660140c483f44962700b1" +

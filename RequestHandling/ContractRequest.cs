@@ -4,14 +4,14 @@ using System.Linq;
 using IBApi;
 using AmiBroker.Data;
 
-namespace AmiBroker.DataSources.IB
+namespace AmiBroker.DataSources.FT
 {
     internal class ContractRequest : Request
     {
         internal ContractRequest(TickerData tickerData) : base(tickerData)
         { }
 
-        internal override bool Process(IBController ibController, bool allowNewRequest)
+        internal override bool Process(FTController ibController, bool allowNewRequest)
         {
             const int requestTimeoutPeriod = 10;
 
@@ -184,7 +184,7 @@ namespace AmiBroker.DataSources.IB
                         //    LogAndMessage.Log(tickerData, MessageType.Trace, "Liquid hour:" + tickerData.ContractDetails.LiquidHours);
 
                         TickerData.TradingDays = new TradingDayList(TickerData.ContractDetails.TradingHours, false);
-                        if ((IBDataSource.AllowMixedEODIntra || IBDataSource.Periodicity == Periodicity.EndOfDay) && string.IsNullOrEmpty(TickerData.ContractDetails.TradingHours))
+                        if ((FTDataSource.AllowMixedEODIntra || FTDataSource.Periodicity == Periodicity.EndOfDay) && string.IsNullOrEmpty(TickerData.ContractDetails.TradingHours))
                             LogAndMessage.Log(TickerData, MessageType.Warning, "No trading hours data is available. Daily quotation data may not be correct.");
                         //else
                         //    LogAndMessage.Log(tickerData, MessageType.Trace, "Trading hour:" + tickerData.ContractDetails.TradingHours);

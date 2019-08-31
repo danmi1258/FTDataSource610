@@ -1,4 +1,4 @@
-﻿namespace AmiBroker.DataSources.IB
+﻿namespace AmiBroker.DataSources.FT
 {
     partial class SearchForm
     {

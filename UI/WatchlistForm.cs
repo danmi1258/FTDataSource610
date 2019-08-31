@@ -3,7 +3,7 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Windows.Forms;
 
-namespace AmiBroker.DataSources.IB
+namespace AmiBroker.DataSources.FT
 {
     public partial class WatchlistForm : Form
     {

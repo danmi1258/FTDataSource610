@@ -4,7 +4,7 @@ using System.Threading;
 using System.Windows.Forms;
 using IBApi;
 
-namespace AmiBroker.DataSources.IB
+namespace AmiBroker.DataSources.FT
 {
     internal partial class SearchForm : Form
     {
@@ -12,7 +12,7 @@ namespace AmiBroker.DataSources.IB
         private static string[] SecTypes = { "STK", "OPT", "FUT", "IND", "FOP", "CASH", "BOND", "WAR", "CMDTY", "FUND", "CFD" };
         private const int maxDisplayedContract = 1000;
 
-        private IBController controller;
+        private FTController controller;
         private string searchedType;
 
         private List<SecurityData> securityDatas;
@@ -22,7 +22,7 @@ namespace AmiBroker.DataSources.IB
         private Contract lastSearchedContract;
         private System.Windows.Forms.Timer timer;
 
-        public SearchForm(IBController controller)
+        public SearchForm(FTController controller)
         {
             this.controller = controller;
             controller.OnContractListReady += SearchContractReady;

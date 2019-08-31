@@ -2,7 +2,7 @@
 using System.Text;
 using IBApi;
 
-namespace AmiBroker.DataSources.IB
+namespace AmiBroker.DataSources.FT
 {
     // SYMBOL FORMAT:
     // symbol[/underlying][@primary exchange][-exchange[-security type[-currency[:data specifier]]]]

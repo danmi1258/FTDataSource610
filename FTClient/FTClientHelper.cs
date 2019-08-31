@@ -4,7 +4,7 @@ using System;
 using System.Globalization;
 using System.Threading;
 
-namespace AmiBroker.DataSources.IB
+namespace AmiBroker.DataSources.FT
 {
     internal static class IBClientHelper
     {

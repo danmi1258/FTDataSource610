@@ -2,21 +2,21 @@
 using System;
 using System.Windows.Forms;
 
-namespace AmiBroker.DataSources.IB
+namespace AmiBroker.DataSources.FT
 {
-    internal partial class IBConfigureForm : Form
+    internal partial class FTConfigureForm : Form
     {
         private InfoSite infoSite;
 
         // constructor
-        internal IBConfigureForm(IBConfiguration oldSettings, ref InfoSite infoSite)
+        internal FTConfigureForm(FTConfiguration oldSettings, ref InfoSite infoSite)
         {
             this.infoSite = infoSite;
 
             InitializeComponent();
 
             if (oldSettings == null)
-                oldSettings = IBConfiguration.GetDefaultConfigObject();
+                oldSettings = FTConfiguration.GetDefaultConfigObject();
 
             // read and set values in controlls
             textBoxIPAddress.Text = oldSettings.Host;
@@ -38,9 +38,9 @@ namespace AmiBroker.DataSources.IB
         }
 
         // build config string from the dialog data
-        internal IBConfiguration GetNewSettings()
+        internal FTConfiguration GetNewSettings()
         {
-            IBConfiguration newSettings = new IBConfiguration();
+            FTConfiguration newSettings = new FTConfiguration();
 
             newSettings.Host = textBoxIPAddress.Text;
             newSettings.Port = int.Parse(textBoxIPPort.Text);

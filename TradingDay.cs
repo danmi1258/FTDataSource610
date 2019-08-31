@@ -1,6 +1,6 @@
 using System;
 
-namespace AmiBroker.DataSources.IB
+namespace AmiBroker.DataSources.FT
 {
     /// <summary>
     /// Trading day and its full time range

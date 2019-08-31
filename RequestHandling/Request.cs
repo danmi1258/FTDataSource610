@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace AmiBroker.DataSources.IB
+namespace AmiBroker.DataSources.FT
 {
     internal abstract class Request
     {
@@ -24,7 +24,7 @@ namespace AmiBroker.DataSources.IB
             RequestTimeouts = 0;
         }
 
-        internal virtual bool Process(IBController ibController, bool allowNewRequest)
+        internal virtual bool Process(FTController ibController, bool allowNewRequest)
         {
             return allowNewRequest;
         }

@@ -1,6 +1,6 @@
 using System;
 
-namespace AmiBroker.DataSources.IB
+namespace AmiBroker.DataSources.FT
 {
     internal static class IBHistoricalDataType
     {

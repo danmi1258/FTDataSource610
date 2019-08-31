@@ -5,7 +5,7 @@ using IBApi;
 using AmiBroker.Data;
 using System.Globalization;
 
-namespace AmiBroker.DataSources.IB
+namespace AmiBroker.DataSources.FT
 {
     internal class HistoricalDataRequest : Request
     {
@@ -20,17 +20,17 @@ namespace AmiBroker.DataSources.IB
         internal HistoricalDataRequest(TickerData tickerData) : base(tickerData)
         { }
 
-        internal override bool Process(IBController ibController, bool allowNewRequest)
+        internal override bool Process(FTController ibController, bool allowNewRequest)
         {
             int requestTimeoutPeriod = 75;
 
             // if contract of the ticker is still being retrieved or headtimestamp of the ticker is needed (not Offline) AND not yet retrieved 
             if (TickerData.ContractStatus <= ContractStatus.WaitForResponse
-            || ((IBDataSource.Periodicity == Periodicity.EndOfDay || IBDataSource.AllowMixedEODIntra) && TickerData.HeadTimestampStatus <= HeadTimestampStatus.WaitForResponse))
+            || ((FTDataSource.Periodicity == Periodicity.EndOfDay || FTDataSource.AllowMixedEODIntra) && TickerData.HeadTimestampStatus <= HeadTimestampStatus.WaitForResponse))
                 return allowNewRequest;
 
             if (TickerData.ContractStatus == ContractStatus.Failed || TickerData.ContractStatus == ContractStatus.Offline
-             || TickerData.HeadTimestampStatus == HeadTimestampStatus.Failed || (TickerData.HeadTimestampStatus == HeadTimestampStatus.Offline && (IBDataSource.Periodicity == Periodicity.EndOfDay || IBDataSource.AllowMixedEODIntra)))
+             || TickerData.HeadTimestampStatus == HeadTimestampStatus.Failed || (TickerData.HeadTimestampStatus == HeadTimestampStatus.Offline && (FTDataSource.Periodicity == Periodicity.EndOfDay || FTDataSource.AllowMixedEODIntra)))
             {
                 TickerData.QuoteDataStatus = QuotationStatus.Failed;
 
@@ -85,7 +85,7 @@ namespace AmiBroker.DataSources.IB
 
                         if (TickerData.SymbolParts.IsContinuous)
                         {
-                            QuotationList mergedQuotes = new QuotationList(IBDataSource.Periodicity);
+                            QuotationList mergedQuotes = new QuotationList(FTDataSource.Periodicity);
 
                             int newQuoteIndex;
 
@@ -111,7 +111,7 @@ namespace AmiBroker.DataSources.IB
                                     // at this point newQuoteIndex points to a quote of the "same" date as mergedQuoteDateTime (if there are quotes for the same day, if not, then the next day)
 
                                     // if daily database then we look for a day where volume on older contract is greater (switch over day)
-                                    if (IBDataSource.Periodicity == Periodicity.EndOfDay)
+                                    if (FTDataSource.Periodicity == Periodicity.EndOfDay)
                                     {
                                         // find the quote that has a lower volume
                                         while (newQuoteIndex > 0 && mergedQuoteIndex > 0
@@ -135,7 +135,7 @@ namespace AmiBroker.DataSources.IB
                                     double priceMult = closeOfNewer / closeOfOlder;
 
                                     // back-adjust prev contracts' prices
-                                    QuotationList tempList = new QuotationList(IBDataSource.Periodicity);
+                                    QuotationList tempList = new QuotationList(FTDataSource.Periodicity);
                                     for (int i = 0; i < mergedQuoteIndex; i++)
                                     {
                                         Quotation quote = mergedQuotes[i];
@@ -178,7 +178,7 @@ namespace AmiBroker.DataSources.IB
                     case QuotationStatus.Failed:
 
                         // if intraday download received no data response
-                        if (errorCode == 162 && IBDataSource.Periodicity < Periodicity.EndOfDay && IBDataSource.Periodicity > Periodicity.FifteenSeconds)
+                        if (errorCode == 162 && FTDataSource.Periodicity < Periodicity.EndOfDay && FTDataSource.Periodicity > Periodicity.FifteenSeconds)
                         {
                             errorCode = 0;
                             
@@ -208,10 +208,10 @@ namespace AmiBroker.DataSources.IB
                             return false;
 
                         // calc download properties
-                        downloadPeriodicity = IBDataSource.Periodicity;
-                        downloadStep = IBClientHelper.GetDownloadStep(IBDataSource.Periodicity);
-                        downloadInterval = IBClientHelper.GetDownloadInterval(IBDataSource.Periodicity);
-                        downloadStart = IBClientHelper.GetAdjustedStartDate(TickerData.RefreshStartDate, IBDataSource.Periodicity, GetEarliestDownloadDate(), true);
+                        downloadPeriodicity = FTDataSource.Periodicity;
+                        downloadStep = IBClientHelper.GetDownloadStep(FTDataSource.Periodicity);
+                        downloadInterval = IBClientHelper.GetDownloadInterval(FTDataSource.Periodicity);
+                        downloadStart = IBClientHelper.GetAdjustedStartDate(TickerData.RefreshStartDate, FTDataSource.Periodicity, GetEarliestDownloadDate(), true);
                         downloadEnd = downloadStart.AddMinutes(downloadInterval);
                         downloadContract = GetCurrentContract(downloadStart);
 
@@ -219,7 +219,7 @@ namespace AmiBroker.DataSources.IB
                         TickerData.Quotes.Clear();
 
                         // set next state
-                        if (IBDataSource.Periodicity == Periodicity.EndOfDay)
+                        if (FTDataSource.Periodicity == Periodicity.EndOfDay)
                             TickerData.QuoteDataStatus = QuotationStatus.DownloadingEod;
                         else
                             TickerData.QuoteDataStatus = QuotationStatus.DownloadingIntra;
@@ -252,7 +252,7 @@ namespace AmiBroker.DataSources.IB
                     case QuotationStatus.DownloadedIntra:
 
                         // if we need EOD data as well
-                        if (IBDataSource.AllowMixedEODIntra)
+                        if (FTDataSource.AllowMixedEODIntra)
                         {
                             if (histThrottling)
                                 return false;
@@ -286,7 +286,7 @@ namespace AmiBroker.DataSources.IB
             }
         }
 
-        private void SendBackfillRequest(IBController ibController)
+        private void SendBackfillRequest(FTController ibController)
         {
             if (downloadContract != null
             // && (string.IsNullOrEmpty(contract.LastTradeDateOrContractMonth) || histStart.ToString("yyyyMMdd").CompareTo(contract.LastTradeDateOrContractMonth) <= 0)
@@ -298,7 +298,7 @@ namespace AmiBroker.DataSources.IB
                 // add quotelist of subcontracts of continuous contract
                 if (TickerData.SymbolParts.IsContinuous)
                     if (!TickerData.ContinuousQuotesDictionary.ContainsKey(downloadContract.LocalSymbol))
-                        TickerData.ContinuousQuotesDictionary.Add(downloadContract.LocalSymbol, new QuotationList(IBDataSource.Periodicity));
+                        TickerData.ContinuousQuotesDictionary.Add(downloadContract.LocalSymbol, new QuotationList(FTDataSource.Periodicity));
 
                 if (downloadPeriodicity <= Periodicity.FifteenSeconds)      // download step is smaller than a day
                     LogAndMessage.LogAndQueue(MessageType.Info, TickerData.ToString(downloadContract) + ": Requesting data from " + downloadStart.ToShortDateString() + " " + downloadStart.ToShortTimeString() + " to " + downloadEnd.ToShortDateString() + " " + downloadEnd.ToShortTimeString() + " " + ToString(false, LogAndMessage.VerboseLog));
@@ -449,7 +449,7 @@ namespace AmiBroker.DataSources.IB
 
                         if (TickerData.SymbolParts.IsContinuous)
                         {
-                            if (IBDataSource.Periodicity == Periodicity.EndOfDay || TickerData.QuoteDataStatus == QuotationStatus.DownloadingEod)
+                            if (FTDataSource.Periodicity == Periodicity.EndOfDay || TickerData.QuoteDataStatus == QuotationStatus.DownloadingEod)
                                 TickerData.ContinuousQuotesDictionary[downloadContract.LocalSymbol].MergeEod(quoteData, quoteData.DateTime);
                             else
                                 TickerData.ContinuousQuotesDictionary[downloadContract.LocalSymbol].Merge(quoteData);
@@ -458,7 +458,7 @@ namespace AmiBroker.DataSources.IB
                         {
                             lock (TickerData.Quotes)
                             {     // store in the list directly only for non contiguous contracts
-                                if (IBDataSource.Periodicity == Periodicity.EndOfDay || TickerData.QuoteDataStatus == QuotationStatus.DownloadingEod)
+                                if (FTDataSource.Periodicity == Periodicity.EndOfDay || TickerData.QuoteDataStatus == QuotationStatus.DownloadingEod)
                                     TickerData.Quotes.MergeEod(quoteData, quoteData.DateTime);
                                 else
                                     TickerData.Quotes.Merge(quoteData);

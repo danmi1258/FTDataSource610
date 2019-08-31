@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using AmiBroker.Data;
 
-namespace AmiBroker.DataSources.IB
+namespace AmiBroker.DataSources.FT
 {
     internal class HistRequestQueue : RequestQueue
     {
         internal HistRequestQueue(string queueName) : base(queueName)
         { }
 
-        internal override bool ProcessQueuedRequests(IBController ibController, bool allowNewRequest, bool writeLog)
+        internal override bool ProcessQueuedRequests(FTController ibController, bool allowNewRequest, bool writeLog)
         {
             int cntAtStart;
             int cntAtEnd;

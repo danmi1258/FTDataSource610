@@ -1,7 +1,7 @@
 ﻿using IBApi;
 using System.Collections.Generic;
 
-namespace AmiBroker.DataSources.IB
+namespace AmiBroker.DataSources.FT
 {
     internal class ContractDetailsComparer : IComparer<ContractDetails>
     {

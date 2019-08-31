@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Text;
 using AmiBroker.Data;
 
-namespace AmiBroker.DataSources.IB
+namespace AmiBroker.DataSources.FT
 {
     internal enum MessageType : int { Error = 0, Warning = 1, Info = 2, Trace = 3 }
 

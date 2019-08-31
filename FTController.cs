@@ -7,14 +7,14 @@ using System.Globalization;
 using System.Reflection;
 using System.Text;
 
-namespace AmiBroker.DataSources.IB
+namespace AmiBroker.DataSources.FT
 {
     internal enum IBPluginState : int { Disconnected, Ready, Busy }
 
     internal delegate void ContractListReadyDelegate();
     internal delegate void ContractReadyDelegate(ContractDetails contractDetails);
 
-    internal class IBController : IDisposable
+    internal class FTController : IDisposable
     {
         // event to notify SearchForm 
         internal event ContractListReadyDelegate OnContractListReady;
@@ -24,8 +24,8 @@ namespace AmiBroker.DataSources.IB
         private TickerDataCollection tickers;
 
         // IB interface
-        private IBClient ibClient;
-        private int ibClientId;
+        private FTClient ftClient;
+        private int ftClientId;
         private bool isIBConnected;                                 // if TWS is connected to an IB gateway server
         internal bool RestartStreaming;                             // if connection loss causes resubmitting stream requests
 
@@ -46,13 +46,13 @@ namespace AmiBroker.DataSources.IB
 
         private SortedList<int, List<Bar>> histTempResults = new SortedList<int, List<Bar>>();
 
-        internal IBController()
+        internal FTController()
         {
             try
             {
-                ibClientId = IBDataSource.IBConfiguration.ClientId;
-                if (ibClientId == 0)
-                    ibClientId = Process.GetCurrentProcess().Id;
+                ftClientId = FTDataSource.IBConfiguration.ClientId;
+                if (ftClientId == 0)
+                    ftClientId = Process.GetCurrentProcess().Id;
 
                 tickers = new TickerDataCollection();
 
@@ -76,14 +76,14 @@ namespace AmiBroker.DataSources.IB
         {
             try
             {
-                if (ibClient == null)
-                    ibClient = new IBClient(this);
+                if (ftClient == null)
+                    ftClient = new FTClient(this);
 
-                if (!ibClient.IsConnected)
+                if (!ftClient.IsConnected)
                 {
                     isIBConnected = false;                          // SendCurrentTimeRequest's response will set it true, if IB is realy connected
-                    ibClient.Connect(IBDataSource.IBConfiguration.Host, IBDataSource.IBConfiguration.Port, ibClientId);
-                    LogAndMessage.Log(MessageType.Info, "TWS connected. Server version:" + ibClient.ServerVersion);
+                    ftClient.Connect(FTDataSource.IBConfiguration.Host, (ushort)FTDataSource.IBConfiguration.Port);
+                    LogAndMessage.Log(MessageType.Info, "TWS connected. Server version:" + ftClient.ServerVersion);
 
                     // Note:
                     // plugin is considered connected only after reqCurrenTime request got a response from tws
@@ -94,8 +94,8 @@ namespace AmiBroker.DataSources.IB
                 if (!autoReconnect)
                     LogAndMessage.LogAndQueue(MessageType.Error, "Cannot connect to TWS: Cannot connect to IP address and port. Check plugin configuration!");
 
-                ibClient.Dispose();
-                ibClient = null;
+                ftClient.Dispose();
+                ftClient = null;
                 isIBConnected = false;
             }
             catch (Exception ex)
@@ -103,8 +103,8 @@ namespace AmiBroker.DataSources.IB
                 if (!autoReconnect)
                     LogAndMessage.LogAndQueue(MessageType.Error, "Cannot connect to TWS:" + ex);
 
-                ibClient.Dispose();
-                ibClient = null;
+                ftClient.Dispose();
+                ftClient = null;
                 isIBConnected = false;
             }
         }
@@ -128,10 +128,10 @@ namespace AmiBroker.DataSources.IB
                 // dispose IBClient and log disconnect event
                 //
 
-                if (ibClient != null)
+                if (ftClient != null)
                 {
-                    ibClient.Dispose();
-                    ibClient = null;
+                    ftClient.Dispose();
+                    ftClient = null;
                     LogAndMessage.Log(MessageType.Info, "TWS disconnected.");
                 }
                 else
@@ -141,10 +141,10 @@ namespace AmiBroker.DataSources.IB
             {
                 LogAndMessage.Log(MessageType.Error, "Failed to disconnect from TWS gracefully:" + ex);
 
-                if (ibClient != null)
+                if (ftClient != null)
                 {
-                    ibClient.Dispose();
-                    ibClient = null;
+                    ftClient.Dispose();
+                    ftClient = null;
                 }
                 isIBConnected = false;
             }
@@ -158,14 +158,14 @@ namespace AmiBroker.DataSources.IB
                 scheduler.Stop();
             }
 
-            if (ibClient != null)
-                ibClient.Dispose();
+            if (ftClient != null)
+                ftClient.Dispose();
         }
 
         internal bool IsIbConnected()
         {
-            return ibClient != null
-                && ibClient.IsConnected // IBClient is connected to TWS
+            return ftClient != null
+                && ftClient.IsConnected // IBClient is connected to TWS
                 && isIBConnected;       // TWS is connected to IB servers
         }
 
@@ -213,7 +213,7 @@ namespace AmiBroker.DataSources.IB
                     scheduler.QueueSubscriptionRequest(tickerData);
 
                 if (tickerData.QuoteDataStatus != QuotationStatus.Offline)
-                    scheduler.QueueBackfillRequest(tickerData, IBDataSource.IBConfiguration.BadTickFilter, refreshStartDate);
+                    scheduler.QueueBackfillRequest(tickerData, FTDataSource.IBConfiguration.BadTickFilter, refreshStartDate);
             }
         }
 
@@ -274,7 +274,7 @@ namespace AmiBroker.DataSources.IB
                     tickerData.StockInfo = quotes.StockInfo;
 
                     // if contract data is available (Watchlist refresh) but AB symbol not updated yet because this is the first call of GetQuotesEx (see ProcessContractDetailsRequests)
-                    if (tickerData.ContractStatus == ContractStatus.Ok && IBDataSource.IBConfiguration.SymbolUpdate)
+                    if (tickerData.ContractStatus == ContractStatus.Ok && FTDataSource.IBConfiguration.SymbolUpdate)
                         scheduler.QueueSymbolUpdateRequest(tickerData);
                 }
 
@@ -287,12 +287,12 @@ namespace AmiBroker.DataSources.IB
                 {
                     scheduler.QueueContractRequest(tickerData);
                     // if no need for this data
-                    if (IBDataSource.AllowMixedEODIntra || IBDataSource.Periodicity == Periodicity.EndOfDay)
+                    if (FTDataSource.AllowMixedEODIntra || FTDataSource.Periodicity == Periodicity.EndOfDay)
                         scheduler.QueueHeadTimestampRequest(tickerData);
                     scheduler.QueueSymbolUpdateRequest(tickerData);
                     DateTime refreshStartDate = GetBackfillStartDate(tickerData, quotes);
-                    refreshStartDate = IBClientHelper.GetAdjustedStartDate(refreshStartDate, IBDataSource.Periodicity, DateTime.MinValue, true);
-                    scheduler.QueueBackfillRequest(tickerData, IBDataSource.IBConfiguration.BadTickFilter, refreshStartDate);
+                    refreshStartDate = IBClientHelper.GetAdjustedStartDate(refreshStartDate, FTDataSource.Periodicity, DateTime.MinValue, true);
+                    scheduler.QueueBackfillRequest(tickerData, FTDataSource.IBConfiguration.BadTickFilter, refreshStartDate);
 
                     return;
                 }
@@ -378,7 +378,7 @@ namespace AmiBroker.DataSources.IB
             if (quotes.Count == 0)
             {
                 // we download data of ca. 2 requests
-                refreshStart = DateTime.Now.AddMinutes(-IBClientHelper.GetDefaultDownloadPeriod(IBDataSource.Periodicity));
+                refreshStart = DateTime.Now.AddMinutes(-IBClientHelper.GetDefaultDownloadPeriod(FTDataSource.Periodicity));
             }
 
             // if database already has some quotes we backfill continuously unless...
@@ -391,7 +391,7 @@ namespace AmiBroker.DataSources.IB
                 int lastIndex = quotes.Count - 1;
 
                 // if mixed quotes we need the last intraday quote
-                if (IBDataSource.Periodicity != Periodicity.EndOfDay && IBDataSource.AllowMixedEODIntra)
+                if (FTDataSource.Periodicity != Periodicity.EndOfDay && FTDataSource.AllowMixedEODIntra)
                 {
                     for (; lastIndex >= 0; lastIndex--)
                         if (!quotes[lastIndex].DateTime.IsEod)
@@ -402,24 +402,24 @@ namespace AmiBroker.DataSources.IB
                 TimeSpan intervalToBackfill = DateTime.Now.Subtract(lastQuoteDate);
 
                 int quotesToDownload = 0;
-                if (IBDataSource.Periodicity == Periodicity.EndOfDay)
+                if (FTDataSource.Periodicity == Periodicity.EndOfDay)
                     quotesToDownload = (int)((intervalToBackfill.TotalDays + 1) * 5 / 7);       // a week has only 5 working days
                 else if (tickerData.SymbolParts.SecurityType == "CASH")
-                    quotesToDownload = (int)(intervalToBackfill.TotalSeconds / (int)IBDataSource.Periodicity * 5.25 / 7);   // intraday, cash market may be open for 24 hours 5 days a week and part of sunday !!!
+                    quotesToDownload = (int)(intervalToBackfill.TotalSeconds / (int)FTDataSource.Periodicity * 5.25 / 7);   // intraday, cash market may be open for 24 hours 5 days a week and part of sunday !!!
                 else
-                    quotesToDownload = (int)(intervalToBackfill.TotalSeconds / (int)IBDataSource.Periodicity * 5 / 7 / 3);  // intraday, market may be open for 8 hours 5 days a week 
+                    quotesToDownload = (int)(intervalToBackfill.TotalSeconds / (int)FTDataSource.Periodicity * 5 / 7 / 3);  // intraday, market may be open for 8 hours 5 days a week 
 
                 // if db cannot accomodate the number of quotes to download we need to reset the quotes array and refresh default period
                 if (quotesToDownload > quotes.Length)
                 {
                     quotes.Clear();
-                    refreshStart = DateTime.Now.AddMinutes(-IBClientHelper.GetDefaultDownloadPeriod(IBDataSource.Periodicity));
+                    refreshStart = DateTime.Now.AddMinutes(-IBClientHelper.GetDefaultDownloadPeriod(FTDataSource.Periodicity));
                 }
 
                 else
                 {
                     // the "single request" start date of backfill
-                    int downloadstep = IBClientHelper.GetDownloadStep(IBDataSource.Periodicity);
+                    int downloadstep = IBClientHelper.GetDownloadStep(FTDataSource.Periodicity);
                     DateTime suggestedStart = DateTime.Now.AddMinutes(-downloadstep);
 
                     // the start date from the last quote
@@ -585,7 +585,7 @@ namespace AmiBroker.DataSources.IB
             if (tickerData.QuoteDataStatus == QuotationStatus.Offline || tickerData.QuoteDataStatus == QuotationStatus.Online || tickerData.QuoteDataStatus == QuotationStatus.Failed)
             {
                 scheduler.QueueContractRequest(tickerData);
-                scheduler.QueueBackfillRequest(tickerData, IBDataSource.IBConfiguration.BadTickFilter, refreshStartDate);
+                scheduler.QueueBackfillRequest(tickerData, FTDataSource.IBConfiguration.BadTickFilter, refreshStartDate);
 
                 return true;
             }
@@ -636,7 +636,7 @@ namespace AmiBroker.DataSources.IB
         {
             CancelAllRefreshes();
 
-            int interval = IBClientHelper.GetDownloadStep(IBDataSource.Periodicity);
+            int interval = IBClientHelper.GetDownloadStep(FTDataSource.Periodicity);
             DateTime maxRefreshStartDate = DateTime.Now.AddMinutes(-interval);          // we cannot download shorter period....
 
             refreshStartDate = maxRefreshStartDate < refreshStartDate ? maxRefreshStartDate : refreshStartDate;
@@ -649,7 +649,7 @@ namespace AmiBroker.DataSources.IB
                 lock (tickerData) // UI
                 {
                     if (tickerData.QuoteDataStatus == QuotationStatus.Online || tickerData.QuoteDataStatus == QuotationStatus.Failed)
-                        scheduler.QueueBackfillRequest(tickerData, IBDataSource.IBConfiguration.BadTickFilter, refreshStartDate);
+                        scheduler.QueueBackfillRequest(tickerData, FTDataSource.IBConfiguration.BadTickFilter, refreshStartDate);
                 }
             }
         }
@@ -707,7 +707,7 @@ namespace AmiBroker.DataSources.IB
                 nextUpdateOfCurrentTime = now.AddSeconds(15);
 
                 scheduler.ReqisterGeneralRequest();
-                ibClient.RequestCurrentTime();
+                ftClient.RequestCurrentTime();
 
                 return false;
             }
@@ -732,7 +732,7 @@ namespace AmiBroker.DataSources.IB
         internal void SendContractDetailsRequest(int requestId, Contract contract)
         {
             scheduler.ReqisterGeneralRequest();
-            ibClient.RequestContractDetails(requestId, contract);
+            ftClient.RequestContractDetails(requestId, contract);
         }
 
         private SortedList<int, List<ContractDetails>> cdTempResults = new SortedList<int, List<ContractDetails>>();
@@ -808,10 +808,10 @@ namespace AmiBroker.DataSources.IB
         internal void SendHeadTimestampRequest(int requestId, TickerData tickerData)
         {
             scheduler.ReqisterGeneralRequest();
-            ibClient.RequestHeadTimestamp(requestId,
+            ftClient.RequestHeadTimestamp(requestId,
                 tickerData.ContractDetails.Contract,
                 IBHistoricalDataType.GetIBHistoricalDataType(tickerData.SymbolParts.DataType),
-                IBDataSource.RthOnly);
+                FTDataSource.RthOnly);
         }
 
         internal void ProcessHeadTimestampEvent(int reqId, string headTimestamp)
@@ -842,12 +842,12 @@ namespace AmiBroker.DataSources.IB
                     int newReqMktDataId = IBClientHelper.GetNextReqId();
 
                     scheduler.ReqisterGeneralRequest();
-                    ibClient.CancelMarketData(regMktDataId);
+                    ftClient.CancelMarketData(regMktDataId);
 
                     tickers.ReregisterReqMktData(regMktDataId, newReqMktDataId);
 
                     scheduler.ReqisterGeneralRequest();
-                    ibClient.RequestMarketData(newReqMktDataId, tickerData.ContractDetails.Contract, tickerData.SymbolParts.DataType);
+                    ftClient.RequestMarketData(newReqMktDataId, tickerData.ContractDetails.Contract, tickerData.SymbolParts.DataType);
 
                     LogAndMessage.Log(tickerData, MessageType.Info, "Streaming data subscription restarted.");
                 }
@@ -879,7 +879,7 @@ namespace AmiBroker.DataSources.IB
                 tickers.RegisterReqMktData(reqId, tickerData);
 
                 scheduler.ReqisterGeneralRequest();
-                ibClient.RequestMarketData(reqId, tickerData.ContractDetails.Contract, tickerData.SymbolParts.DataType);
+                ftClient.RequestMarketData(reqId, tickerData.ContractDetails.Contract, tickerData.SymbolParts.DataType);
 
                 LogAndMessage.Log(tickerData, MessageType.Info, "Streaming data subscription started.");
             }
@@ -1151,13 +1151,13 @@ namespace AmiBroker.DataSources.IB
             if (showWhat == IBHistoricalDataType.BidAsk)
                 scheduler.ReqisterHistoricalDataRequest();
 
-            ibClient.RequestHistoricalData(id,
+            ftClient.RequestHistoricalData(id,
                                             histReqContract,
                                             histEnd.ToUniversalTime(),
                                             IBClientHelper.ConvSecondsToIBPeriod(histStart, histEnd),
                                             IBClientHelper.ConvSecondsToIBBarSize(histPeriodicity),
                                             IBHistoricalDataType.GetIBHistoricalDataType(showWhat),
-                                            IBDataSource.RthOnly);
+                                            FTDataSource.RthOnly);
         }
 
         internal void ProcessQuotesReceivedEvent(int reqId, Bar bar)
